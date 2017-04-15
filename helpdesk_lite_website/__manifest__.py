@@ -3,10 +3,10 @@
     'name': "HelpDesk website access",
     'version': "0.1",
     'author': "Golubev",
-    'category': 'Hidden',
+    'category': "Tools",
     'complexity': 'easy',
     'support': "golubev@svami.in.ua",
-    'summary': "A helpdesk / support ticket system",
+    'summary': "A helpdesk / support ticket system (website support)",
     'description': """
 A helpdesk / support ticket system
 This module adds helpdesk tickets inside your account's page on website.
