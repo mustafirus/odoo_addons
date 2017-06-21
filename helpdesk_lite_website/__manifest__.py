@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': "HelpDesk website access",
-    'version': "0.1",
+    'version': "0.2",
     'author': "Golubev",
     'category': "Tools",
     'complexity': 'easy',
