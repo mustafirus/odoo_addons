@@ -60,12 +60,12 @@ class WebsiteAccount(website_account):
             'default_url': '/my/tickets',
             'pager': pager
         })
-        return request.render("helpdesk_website.my_tickets", values)
+        return request.render("helpdesk_lite_website.my_tickets", values)
 
     @http.route(['/my/tickets/<int:ticket_id>'], type='http', auth="user", website=True)
     def my_tickets_ticket(self, ticket_id=None, **kw):
         ticket = request.env['helpdesk_lite.ticket'].browse(ticket_id)
-        return request.render("helpdesk_website.my_tickets_ticket", {'ticket': ticket})
+        return request.render("helpdesk_lite_website.my_tickets_ticket", {'ticket': ticket})
 
     @http.route(['/helpdesk/submit'], type='http', auth="public", website=True)
     def new_ticket(self, **kw):

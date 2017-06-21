@@ -14,6 +14,6 @@ class HelpdeskConfig(models.TransientModel):
     _inherit = 'res.config.settings'
 
     default_name = fields.Char('Default ticket name', default_model='helpdesk_lite.ticket')
-    module_helpdesk_lite_website = fields.Boolean("Publish on website", help='Installs module helpdesk_website')
+    module_helpdesk_lite_website = fields.Boolean("Publish on website", help='Installs module helpdesk_lite_website')
 
 
