@@ -11,7 +11,7 @@
                         <button string="Cancel" type="object" name="cancel" class="oe_link"/>
                     </header>
                     <group string="Helpdesk Management" name="helpdesk_management">
-                        <field name="module_helpdesk_website"/>
+                        <field name="module_helpdesk_lite_website"/>
                     </group>
                     <div>
                         <span>(*) This configuration is related to the company you're logged into.</span>
