@@ -16,7 +16,7 @@ class Stage(models.Model):
         management flow. Tickets will now use only stages, instead of state and stages.
         Stages are for example used to display the kanban view of records.
     """
-    _name = "helpdesk.stage"
+    _name = "helpdesk_lite.stage"
     _description = "Stage of case"
     _rec_name = 'name'
     _order = "sequence, name, id"

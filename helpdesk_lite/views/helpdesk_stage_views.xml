@@ -3,7 +3,7 @@
 
     <record id="helpdesk_stage_search" model="ir.ui.view">
         <field name="name">Stage - Search</field>
-        <field name="model">helpdesk.stage</field>
+        <field name="model">helpdesk_lite.stage</field>
         <field name="arch" type="xml">
             <search string="Stage Search">
                 <field name="name"/>
@@ -13,8 +13,8 @@
     </record>
 
     <record id="helpdesk_stage_tree" model="ir.ui.view">
-        <field name="name">helpdesk.stage.tree</field>
-        <field name="model">helpdesk.stage</field>
+        <field name="name">helpdesk_lite.stage.tree</field>
+        <field name="model">helpdesk_lite.stage</field>
         <field name="arch" type="xml">
             <tree string="Stages">
                 <field name="sequence" widget="handle"/>
@@ -24,8 +24,8 @@
     </record>
 
     <record id="helpdesk_stage_form" model="ir.ui.view">
-        <field name="name">helpdesk.stage.form</field>
-        <field name="model">helpdesk.stage</field>
+        <field name="name">helpdesk_lite.stage.form</field>
+        <field name="model">helpdesk_lite.stage</field>
         <field name="priority" eval="1"/>
         <field name="arch" type="xml">
             <form string="Stage">
@@ -45,9 +45,9 @@
 
     <record id="helpdesk_stage_action" model="ir.actions.act_window">
         <field name="name">Stages</field>
-        <field name="res_model">helpdesk.stage</field>
+        <field name="res_model">helpdesk_lite.stage</field>
         <field name="view_type">form</field>
-        <field name="view_id" ref="helpdesk.helpdesk_stage_tree"/>
+        <field name="view_id" ref="helpdesk_lite.helpdesk_stage_tree"/>
         <field name="help" type="html">
           <p class="oe_view_nocontent_create">
             Click to set a new stage in your support pipeline.

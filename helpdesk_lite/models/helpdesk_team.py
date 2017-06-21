@@ -6,7 +6,7 @@ from odoo.tools import safe_eval
 
 
 class SupportTeam(models.Model):
-    _name = "helpdesk.team"
+    _name = "helpdesk_lite.team"
     _inherit = ['mail.alias.mixin', 'mail.thread', 'ir.needaction_mixin']
     _description = "Support Team"
     _order = "name"
@@ -50,18 +50,18 @@ class SupportTeam(models.Model):
             user_id = self.env.uid
         team_id = None
         if 'default_team_id' in self.env.context:
-            team_id = self.env['helpdesk.team'].browse(self.env.context.get('default_team_id'))
+            team_id = self.env['helpdesk_lite.team'].browse(self.env.context.get('default_team_id'))
         if not team_id or not team_id.exists():
-            team_id = self.env['helpdesk.team'].sudo().search(
+            team_id = self.env['helpdesk_lite.team'].sudo().search(
                 ['|', ('user_id', '=', user_id), ('member_ids', '=', user_id)],
                 limit=1)
         if not team_id:
-            team_id = self.env.ref('helpdesk.team_alpha', raise_if_not_found=False)
+            team_id = self.env.ref('helpdesk_lite.team_alpha', raise_if_not_found=False)
         return team_id
 
 
     def get_alias_model_name(self, vals):
-        return 'helpdesk.ticket'
+        return 'helpdesk_lite.ticket'
 
     def get_alias_values(self):
         values = super(SupportTeam, self).get_alias_values()

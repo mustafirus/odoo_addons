@@ -10,10 +10,10 @@ import odoo
 from os.path import expanduser
 
 class HelpdeskConfig(models.TransientModel):
-    _name = 'helpdesk.config.settings'
+    _name = 'helpdesk_lite.config.settings'
     _inherit = 'res.config.settings'
 
-    default_name = fields.Char('Default ticket name', default_model='helpdesk.ticket')
+    default_name = fields.Char('Default ticket name', default_model='helpdesk_lite.ticket')
     module_helpdesk_lite_website = fields.Boolean("Publish on website", help='Installs module helpdesk_website')
 
 

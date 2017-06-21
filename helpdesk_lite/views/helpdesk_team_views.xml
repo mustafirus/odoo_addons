@@ -5,7 +5,7 @@
         <!-- Cateamions Search view -->
         <record id="support_team_search" model="ir.ui.view">
             <field name="name">Case Teams - Search</field>
-            <field name="model">helpdesk.team</field>
+            <field name="model">helpdesk_lite.team</field>
             <field name="arch" type="xml">
                 <search string="Supportteams Search">
                     <filter name="personal" string="My Teams" domain="['|', ('member_ids', '=', uid), ('user_id', '=', uid)]"/>
@@ -23,7 +23,7 @@
         <!-- Case Teams Action -->
         <record id="support_team_dashboard_action" model="ir.actions.act_window">
             <field name="name">Dashboard</field>
-            <field name="res_model">helpdesk.team</field>
+            <field name="res_model">helpdesk_lite.team</field>
             <field name="view_type">form</field>
             <field name="view_mode">kanban,form</field>
             <field name="context">{}</field>
@@ -42,8 +42,8 @@
         <!-- Case Teams Form View -->
 
          <record id="support_team_view_form" model="ir.ui.view">
-            <field name="name">helpdesk.team.form</field>
-            <field name="model">helpdesk.team</field>
+            <field name="name">helpdesk_lite.team.form</field>
+            <field name="model">helpdesk_lite.team</field>
             <field name="arch" type="xml">
                 <form string="Support Team">
                     <sheet>
@@ -116,8 +116,8 @@
 
         <!-- Case Teams Tree View -->
         <record id="support_team_view_tree" model="ir.ui.view">
-            <field name="name">helpdesk.team.tree</field>
-            <field name="model">helpdesk.team</field>
+            <field name="name">helpdesk_lite.team.tree</field>
+            <field name="model">helpdesk_lite.team</field>
             <field name="field_parent">child_ids</field>
             <field name="arch" type="xml">
                 <tree string="Support Team">
@@ -130,7 +130,7 @@
 
         <!--<record id="support_team_act" model="ir.actions.act_window">-->
             <!--<field name="name">Support Teams</field>-->
-            <!--<field name="res_model">helpdesk.team</field>-->
+            <!--<field name="res_model">helpdesk_lite.team</field>-->
             <!--<field name="view_type">form</field>-->
             <!--<field name="view_id" ref="support_team_view_tree"/>-->
             <!--<field name="help" type="html">-->
@@ -156,7 +156,7 @@
 
         <record id="support_team_config_action" model="ir.actions.act_window">
             <field name="name">Support Teams</field>
-            <field name="res_model">helpdesk.team</field>
+            <field name="res_model">helpdesk_lite.team</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="context">{}</field>
@@ -174,7 +174,7 @@
 
         <!--<act_window id="support_team_config_action"-->
             <!--name="Support teams"-->
-            <!--res_model="helpdesk.team"-->
+            <!--res_model="helpdesk_lite.team"-->
             <!--view_mode="tree,form"-->
             <!--context="{}"-->
         <!--/>-->

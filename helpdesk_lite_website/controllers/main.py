@@ -14,7 +14,7 @@ class WebsiteAccount(website_account):
         values = super(WebsiteAccount, self)._prepare_portal_layout_values()
         # domain is needed to hide non portal project for employee
         # portal users can't see the privacy_visibility, fetch the domain for them in sudo
-        ticket_count = request.env['helpdesk.ticket'].search_count([])
+        ticket_count = request.env['helpdesk_lite.ticket'].search_count([])
         values.update({
             'ticket_count': ticket_count,
         })
@@ -35,7 +35,7 @@ class WebsiteAccount(website_account):
         order = sortings.get(sortby, sortings['date'])['order']
 
         # archive groups - Default Group By 'create_date'
-        archive_groups = self._get_archive_groups('helpdesk.ticket', domain)
+        archive_groups = self._get_archive_groups('helpdesk_lite.ticket', domain)
         if date_begin and date_end:
             domain += [('create_date', '>', date_begin), ('create_date', '<=', date_end)]
         # pager
@@ -47,7 +47,7 @@ class WebsiteAccount(website_account):
             step=self._items_per_page
         )
         # content according to pager and archive selected
-        helpdesk_ticket = request.env['helpdesk.ticket'].search(domain, order=order, limit=self._items_per_page, offset=pager['offset'])
+        helpdesk_ticket = request.env['helpdesk_lite.ticket'].search(domain, order=order, limit=self._items_per_page, offset=pager['offset'])
 
         values.update({
             'date': date_begin,
@@ -64,7 +64,7 @@ class WebsiteAccount(website_account):
 
     @http.route(['/my/tickets/<int:ticket_id>'], type='http', auth="user", website=True)
     def my_tickets_ticket(self, ticket_id=None, **kw):
-        ticket = request.env['helpdesk.ticket'].browse(ticket_id)
+        ticket = request.env['helpdesk_lite.ticket'].browse(ticket_id)
         return request.render("helpdesk_website.my_tickets_ticket", {'ticket': ticket})
 
     @http.route(['/helpdesk/submit'], type='http', auth="public", website=True)
@@ -83,13 +83,13 @@ class WebsiteAccount(website_account):
 
     @http.route(['/helpdesk'], type='http', auth="public", website=True)
     def helpdesk(self, **kw):
-        team = http.request.env.ref('helpdesk.team_alpha')
+        team = http.request.env.ref('helpdesk_lite.team_alpha')
         team.website_published = False
-        return request.render("helpdesk.helpdesk",{ 'use_website_helpdesk_form' : True,
+        return request.render("helpdesk_lite.helpdesk",{ 'use_website_helpdesk_form' : True,
                                                     'team': team,
                                                     })
-        # teams = http.request.env['helpdesk.team']
-        # return request.render("helpdesk.helpdesk",{ 'teams' : teams,
+        # teams = http.request.env['helpdesk_lite.team']
+        # return request.render("helpdesk_lite.helpdesk",{ 'teams' : teams,
         #                                             'team': team,
         #                                             'use_website_helpdesk_form' : True })
 

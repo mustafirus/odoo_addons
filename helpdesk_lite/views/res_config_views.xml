@@ -2,7 +2,7 @@
 <odoo>
         <record id="view_config_settings" model="ir.ui.view">
             <field name="name">helpdesk settings</field>
-            <field name="model">helpdesk.config.settings</field>
+            <field name="model">helpdesk_lite.config.settings</field>
             <field name="priority" eval="20"/>
             <field name="arch" type="xml">
                 <form class="oe_form_configuration">
@@ -23,7 +23,7 @@
         <record id="action_config_settings" model="ir.actions.act_window">
             <field name="name">Configure Helpdesk</field>
             <field name="type">ir.actions.act_window</field>
-            <field name="res_model">helpdesk.config.settings</field>
+            <field name="res_model">helpdesk_lite.config.settings</field>
             <field name="view_mode">form</field>
             <field name="target">inline</field>
         </record>

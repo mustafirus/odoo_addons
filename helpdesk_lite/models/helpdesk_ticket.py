@@ -6,7 +6,7 @@ from odoo.exceptions import AccessError
 
 
 class HelpdeskTicket(models.Model):
-    _name = "helpdesk.ticket"
+    _name = "helpdesk_lite.ticket"
     _description = "Helpdesk Tickets"
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _order = "priority desc, create_date desc"
@@ -14,7 +14,7 @@ class HelpdeskTicket(models.Model):
 
     @api.model
     def _get_default_stage_id(self):
-        return self.env['helpdesk.stage'].search("", order='sequence', limit=1)
+        return self.env['helpdesk_lite.stage'].search("", order='sequence', limit=1)
 
     name = fields.Char(string='Ticket', track_visibility='always', required=True)
     description = fields.Text('Private Note')
@@ -22,12 +22,12 @@ class HelpdeskTicket(models.Model):
     contact_name = fields.Char('Contact Name')
     email_from = fields.Char('Email', help="Email address of the contact", index=True)
     user_id = fields.Many2one('res.users', string='Assigned to', track_visibility='onchange', index=True, default=False)
-    team_id = fields.Many2one('helpdesk.team', string='Support Team', track_visibility='onchange',
-        default=lambda self: self.env['helpdesk.team'].sudo()._get_default_team_id(user_id=self.env.uid),
+    team_id = fields.Many2one('helpdesk_lite.team', string='Support Team', track_visibility='onchange',
+        default=lambda self: self.env['helpdesk_lite.team'].sudo()._get_default_team_id(user_id=self.env.uid),
         index=True, help='When sending mails, the default email address is taken from the support team.')
     date_deadline = fields.Datetime(string='Deadline', track_visibility='onchange')
 
-    stage_id = fields.Many2one('helpdesk.stage', string='Stage', index=True, track_visibility='onchange',
+    stage_id = fields.Many2one('helpdesk_lite.stage', string='Stage', index=True, track_visibility='onchange',
                                domain="[]",
                                copy=False,
                                group_expand='_read_group_stage_ids',
@@ -165,7 +165,7 @@ class HelpdeskTicket(models.Model):
     def takeit(self):
         self.ensure_one()
         vals = {'user_id' : self.env.uid,
-                'team_id': self.env['helpdesk.team'].sudo()._get_default_team_id(user_id=self.env.uid).id}
+                'team_id': self.env['helpdesk_lite.team'].sudo()._get_default_team_id(user_id=self.env.uid).id}
         return super(HelpdeskTicket, self).write(vals)
 
 
