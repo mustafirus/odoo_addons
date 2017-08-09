@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-        <record id="helpdesk_lite.model_helpdesk_ticket" model="ir.model">
-            <field name="website_form_default_field_id" ref="helpdesk_lite.field_helpdesk_ticket_description" />
+        <record id="helpdesk_lite.model_helpdesk_lite_ticket" model="ir.model">
+            <field name="website_form_default_field_id" ref="helpdesk_lite.field_helpdesk_lite_ticket_description" />
             <field name="website_form_access">True</field>
             <field name="website_form_label">Create a ticket</field>
         </record>

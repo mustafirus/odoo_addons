@@ -178,7 +178,7 @@
         </t>
     </template>
 
-    <template id="website.new_ticket" name="New Ticket" page="True">
+    <template id="helpdesk_lite.new_ticket" name="New Ticket" page="True">
         <t t-name="website.new_ticket">
             <t t-call="website.layout">
                 <div class="container mt16">
