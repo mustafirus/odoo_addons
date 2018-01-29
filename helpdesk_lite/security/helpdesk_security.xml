@@ -48,5 +48,14 @@
             <field name="groups" eval="[(4,ref('base.group_user'))]"/>
         </record>
 
+        <record id="ticket_portal_rule" model="ir.rule">
+            <field name="name">Helpdesk: portal users: (portal and (following project or following tickets)</field>
+            <field name="model_id" ref="model_helpdesk_lite_ticket"/>
+            <field name="domain_force">[
+                        ('message_partner_ids', 'child_of', [user.partner_id.commercial_partner_id.id]),
+                ]</field>
+            <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+        </record>
+
     </data>
 </odoo>
