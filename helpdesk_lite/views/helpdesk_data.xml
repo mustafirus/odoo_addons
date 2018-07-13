@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record model="helpdesk_lite.stage" id="stage_help1">
+        <field name="name">New</field>
+        <field name="sequence">1</field>
+    </record>
+    <record model="helpdesk_lite.stage" id="stage_help2">
+        <field name="name">InProgress</field>
+        <field name="sequence">2</field>
+    </record>
+    <record model="helpdesk_lite.stage" id="stage_help3">
+        <field name="name">Solved</field>
+        <field name="fold" eval="False"/>
+        <field name="sequence">70</field>
+    </record>
+    <record model="helpdesk_lite.stage" id="stage_help4">
+        <field name="name">Canceled</field>
+        <field name="fold" eval="True"/>
+        <field name="sequence">80</field>
+    </record>
+    <data noupdate="1">
+        <record model="helpdesk_lite.team" id="team_alpha">
+            <field name="name">Alpha Team</field>
+            <field name="member_ids" eval="[(4, ref('base.user_root'))]"/>
+        </record>
+
+        <record model="helpdesk_lite.team" id="team_beta">
+            <field name="name">Beta Team</field>
+        </record>
+
+        <record model="helpdesk_lite.team" id="team_omega">
+            <field name="name">Omega Team</field>
+        </record>
+    </data>
+</odoo>
