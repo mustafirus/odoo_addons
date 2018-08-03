@@ -20,6 +20,7 @@
             </field>
         </record>
 
+<!--
         <record id="action_config_settings" model="ir.actions.act_window">
             <field name="name">Configure Helpdesk</field>
             <field name="type">ir.actions.act_window</field>
@@ -30,4 +31,5 @@
 
         <menuitem id="menu_helpdesk_general_settings" name="Settings" parent="menu_config"
             sequence="0" action="action_config_settings" groups="base.group_system"/>
+-->
 </odoo>

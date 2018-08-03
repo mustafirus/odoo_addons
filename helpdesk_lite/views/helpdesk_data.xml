@@ -21,7 +21,6 @@
     <data noupdate="1">
         <record model="helpdesk_lite.team" id="team_alpha">
             <field name="name">Alpha Team</field>
-            <field name="member_ids" eval="[(4, ref('base.user_root'))]"/>
         </record>
 
         <record model="helpdesk_lite.team" id="team_beta">
