@@ -7,7 +7,7 @@
                 <form>
                 <header>
                     <button string="I Take It" type="object" name="takeit" class="oe_highlight"/>
-                    <button string="Delegate" type="object" name="delegate" readonly="1"/>
+                    <!--<button string="Delegate" type="object" name="delegate" readonly="1"/>-->
                     <field name="stage_id" widget="statusbar" clickable="True"
                         options="{'fold_field': 'fold'}"/>
                 </header>

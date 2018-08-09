@@ -94,8 +94,7 @@ class HelpdeskTicket(models.Model):
         contact_name, email_from =  re.match(r"(.*) *<(.*)>", msg.get('from')).group(1,2)
         body = tools.html2plaintext(msg.get('body'))
         bre = re.match(r"(.*)^-- *$", body, re.MULTILINE|re.DOTALL|re.UNICODE)
-        if bre:
-            desc = bre.group(1)
+        desc = bre.group(1) if bre else None
         defaults = {
             'name':  msg.get('subject') or _("No Subject"),
             'email_from': email_from,
