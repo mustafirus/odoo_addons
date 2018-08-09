@@ -91,7 +91,14 @@ class HelpdeskTicket(models.Model):
         # do not want to explicitly set user_id to False; however we do not
         # want the gateway user to be responsible if no other responsible is
         # found.
-        contact_name, email_from =  re.match(r"(.*) *<(.*)>", msg.get('from')).group(1,2)
+        match = re.match(r"(.*) *<(.*)>", msg.get('from'))
+        if match:
+            contact_name, email_from =  match.group(1,2)
+        else:
+            match = re.match(r"(.*)@.*", msg.get('from'))
+            contact_name =  match.group(1)
+            email_from = msg.get('from')
+
         body = tools.html2plaintext(msg.get('body'))
         bre = re.match(r"(.*)^-- *$", body, re.MULTILINE|re.DOTALL|re.UNICODE)
         desc = bre.group(1) if bre else None
