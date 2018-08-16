@@ -32,6 +32,7 @@ class HelpdeskTicket(models.Model):
         default=lambda self: self.env['helpdesk_lite.team'].sudo()._get_default_team_id(user_id=self.env.uid),
         index=True, help='When sending mails, the default email address is taken from the support team.')
     date_deadline = fields.Datetime(string='Deadline', track_visibility='onchange')
+    date_done = fields.Datetime(string='Done', track_visibility='onchange')
 
     stage_id = fields.Many2one('helpdesk_lite.stage', string='Stage', index=True, track_visibility='onchange',
                                domain="[]",
@@ -39,7 +40,8 @@ class HelpdeskTicket(models.Model):
                                group_expand='_read_group_stage_ids',
                                default=_get_default_stage_id)
     priority = fields.Selection(AVAILABLE_PRIORITIES, 'Priority', index=True, default='1', track_visibility='onchange')
-    kanban_state = fields.Selection([('normal', 'Normal'), ('blocked', 'Blocked'), ('done', 'Ready for next stage')], string='Kanban State', track_visibility='onchange',
+    kanban_state = fields.Selection([('normal', 'Normal'), ('blocked', 'Blocked'), ('done', 'Ready for next stage')],
+                                    string='Kanban State', track_visibility='onchange',
                                     required=True, default='normal',
                                     help="""A Ticket's kanban state indicates special situations affecting it:\n
                                            * Normal is the default situation\n
@@ -74,9 +76,11 @@ class HelpdeskTicket(models.Model):
         try:
             for tic in self:
                 if tic.partner_id:
-                    tic._message_add_suggested_recipient(recipients, partner=tic.partner_id, reason=_('Customer'))
+                    tic._message_add_suggested_recipient(recipients, partner=tic.partner_id,
+                                                         reason=_('Customer'))
                 elif tic.email_from:
-                    tic._message_add_suggested_recipient(recipients, email=tic.email_from, reason=_('Customer Email'))
+                    tic._message_add_suggested_recipient(recipients, email=tic.email_from,
+                                                         reason=_('Customer Email'))
         except AccessError:  # no read access rights -> just ignore suggested recipients because this imply modifying followers
             pass
         return recipients
@@ -102,12 +106,22 @@ class HelpdeskTicket(models.Model):
         body = tools.html2plaintext(msg.get('body'))
         bre = re.match(r"(.*)^-- *$", body, re.MULTILINE|re.DOTALL|re.UNICODE)
         desc = bre.group(1) if bre else None
+
         defaults = {
             'name':  msg.get('subject') or _("No Subject"),
             'email_from': email_from,
-            'contact_name': contact_name,
             'description':  desc or body,
         }
+
+        partner = self.env['res.partner'].sudo().search([('email', '=ilike', email_from)], limit=1)
+        if partner:
+            defaults.update({
+                'partner_id': partner.id,
+            })
+        else:
+            defaults.update({
+                'contact_name': contact_name,
+            })
 
         create_context = dict(self.env.context or {})
         # create_context['default_user_id'] = False
@@ -115,30 +129,23 @@ class HelpdeskTicket(models.Model):
         #     'mail_create_nolog': True,
         # })
 
+        company_id = False
         if custom_values:
             defaults.update(custom_values)
+            team_id = custom_values.get('team_id')
+            if team_id:
+                team = self.env['helpdesk_lite.team'].sudo().browse(team_id)
+                if team.company_id:
+                    company_id = team.company_id.id
+        if not company_id and partner.company_id:
+            company_id = partner.company_id.id
+        defaults.update({'company_id': company_id})
 
         return super(HelpdeskTicket, self.with_context(create_context)).message_new(msg, custom_values=defaults)
-        # res_id = super(HelpdeskTicket, self.with_context(create_context)).message_new(msg, custom_values=defaults)
-        # tic = self.browse(res_id)
-        # email_list = tools.email_split(email_from)
-        # partner_ids = filter(None, tic._find_partner_from_emails(email_list))
-        # tic.message_subscribe(partner_ids)
-        # return res_id
 
     @api.model
     def create(self, vals):
 
-        partner_id = vals.get('partner_id')
-        email_from = vals.get('email_from')
-        if not partner_id:
-            partner = self.env['res.partner'].sudo().search([('email', '=ilike', email_from)], limit=1)
-            partner_id = partner.id
-            if partner_id:
-                vals.update({
-                    'partner_id': partner_id,
-                })
-                del vals['contact_name']
         # if partner_id:
         #     vals.update({
         #         'message_follower_ids': [(4, partner_id)]
@@ -156,12 +163,14 @@ class HelpdeskTicket(models.Model):
     def write(self, vals):
         # stage change: update date_last_stage_update
         if 'stage_id' in vals:
-            # vals.update(vals['stage_id'])
             if 'kanban_state' not in vals:
                 vals['kanban_state'] = 'normal'
-        # user_id change: update date_open
-        # if vals.get('user_id') and 'date_open' not in vals:
-        #     vals['date_open'] = fields.Datetime.now()
+            stage = self.env['helpdesk_lite.stage'].browse(vals['stage_id'])
+            if stage.last:
+                vals.update({'date_done': fields.Datetime.now()})
+            else:
+                vals.update({'date_done': False})
+
         return super(HelpdeskTicket, self).write(vals)
 
     @api.model
@@ -176,33 +185,8 @@ class HelpdeskTicket(models.Model):
     @api.multi
     def takeit(self):
         self.ensure_one()
-        vals = {'user_id' : self.env.uid,
-                'team_id': self.env['helpdesk_lite.team'].sudo()._get_default_team_id(user_id=self.env.uid).id}
+        vals = {
+            'user_id' : self.env.uid,
+            # 'team_id': self.env['helpdesk_lite.team'].sudo()._get_default_team_id(user_id=self.env.uid).id
+        }
         return super(HelpdeskTicket, self).write(vals)
-
-
-
-
-        # res_id = super(HelpdeskTicket, self.with_context(context)).create(vals)
-        # tic = self.browse(res_id)
-        # email_list = tools.email_split(email_from)
-        # partner_ids = filter(None, tic._find_partner_from_emails(email_list))
-        # tic.message_subscribe()
-        # return res_id
-
-        # partner = self.env['res.partner'].sudo().browse(partner_id)
-        # if partner_id:
-        #     vals['message_follower_ids'] = [partner,]
-        # email_list = issue.email_split(msg)
-        #  partner_ids = filter(None, issue._find_partner_from_emails(email_list))
-
-
-
-
-        # if vals.get('user_id') and not vals.get('date_open'):
-        #     vals['date_open'] = fields.Datetime.now()
-        # if 'stage_id' in vals:
-        #     vals.update(vals['stage_id'])
-
-        # context: no_log, because subtype already handle this
-        # context['mail_create_nolog'] = True

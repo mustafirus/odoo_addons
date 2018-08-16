@@ -29,3 +29,5 @@ class Stage(models.Model):
     legend_normal = fields.Char(
         string='Kanban Normal Explanation', translate=True,
         help='Override the default value displayed for the normal state for kanban selection, when the ticket is in that stage.')
+    last = fields.Boolean('Last in Pipeline',
+        help='This stage is last for closed tickets.')

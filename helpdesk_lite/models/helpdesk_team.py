@@ -47,6 +47,7 @@ class SupportTeam(models.Model):
 
     def get_alias_values(self):
         values = super(SupportTeam, self).get_alias_values()
-        values['alias_defaults'] = defaults = safe_eval(self.alias_defaults or "{}")
+        defaults = safe_eval(self.alias_defaults or "{}")
         defaults['team_id'] = self.id
+        values['alias_defaults'] = defaults
         return values
