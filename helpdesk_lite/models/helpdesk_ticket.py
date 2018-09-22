@@ -85,6 +85,16 @@ class HelpdeskTicket(models.Model):
             pass
         return recipients
 
+    def _email_parse(self, email):
+        match = re.match(r"(.*) *<(.*)>", email)
+        if match:
+            contact_name, email_from =  match.group(1,2)
+        else:
+            match = re.match(r"(.*)@.*", email)
+            contact_name =  match.group(1)
+            email_from = email
+        return contact_name, email_from
+
     @api.model
     def message_new(self, msg, custom_values=None):
         """ Overrides mail_thread message_new that is called by the mailgateway
