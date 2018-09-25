@@ -1,12 +1,15 @@
 # -*- coding: utf-8 -*-
 {
     'name': "HelpDesk",
-    'version': "0.1",
+    'version': "1.0",
     'author': "Golubev",
     'category': "Tools",
     'support': "golubev@svami.in.ua",
     'summary': "A helpdesk / support ticket system",
-    'description': "A helpdesk / support ticket system",
+    'description': """
+        Easy to use helpdesk system
+        with teams and website portal
+    """,
     'license':'LGPL-3',
     'data': [
         'security/helpdesk_security.xml',
@@ -22,6 +25,7 @@
     'demo': [
         'demo/helpdesk_demo.xml',
     ],
+    'images': ['static/description/banner.jpg'],
     'depends': ['base', 'mail', 'portal',],
     'application': True,
 }
