@@ -106,12 +106,11 @@
                 <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                 <group expand="0" string="Group By" >
                     <filter string="Assigned to" name="Responsible" context="{'group_by':'user_id'}" />
-                    <filter string="Priority" context="{'group_by':'priority'}" />
-                    <filter string="Stage" context="{'group_by':'stage_id'}"/>
-                    <filter string="Company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                    <filter string="Priority" name="priority" context="{'group_by':'priority'}" />
+                    <filter string="Stage" name="stage" context="{'group_by':'stage_id'}"/>
+                    <filter string="Company" name="company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                     <separator/>
-                    <filter string="Create Day" context="{'group_by':'create_date:day'}" help="Create Date"/>
-                    <filter string="Last Message" name="group_message_last_post" context="{'group_by':'message_last_post:week'}"/>
+                    <filter string="Create Day" name="create" context="{'group_by':'create_date:day'}" help="Create Date"/>
                 </group>
             </search>
         </field>

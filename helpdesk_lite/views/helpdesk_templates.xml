@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <template id="portal_my_home_menu_tickets" name="Portal layout: Tickets menu entry" inherit_id="portal.portal_layout" priority="20">
+    <template id="portal_my_home_menu_tickets" name="Portal layout: Tickets menu entry" inherit_id="portal.portal_breadcrumbs" priority="20">
         <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
             <li t-if="page_name == 'ticket' or ticket">
                 <a t-if="ticket" t-attf-href="/my/tickets?{{ keep_query() }}">Tickets</a>
@@ -14,11 +14,12 @@
     </template>
 
     <template id="portal_my_home" name="Portal My Home: Ticket entries" inherit_id="portal.portal_my_home" priority="30">
-        <xpath expr="//ul[hasclass('o_portal_docs')]" position="inside">
-            <li t-if="ticket_count" class="list-group-item">
-                <span class="badge" t-esc="ticket_count"/>
-                <a href="/my/tickets">Tickets</a>
-            </li>
+        <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
+            <t t-if="ticket_count" t-call="portal.portal_docs_entry">
+                <t t-set="title">Tickets</t>
+                <t t-set="url" t-value="'/my/tickets'"/>
+                <t t-set="count" t-value="ticket_count"/>
+            </t>
         </xpath>
     </template>
 
