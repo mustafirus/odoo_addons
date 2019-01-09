@@ -1,0 +1,46 @@
+<section class="oe_container">
+    <div class="oe_row oe_spaced">
+        <h2 class="oe_slogan" style="color:#875A7B;">Caclulate deadline from hours</h2>
+        <p>
+            Developers library to caclulate deadline from hours
+            acording to work shedule and public holidays
+        </p>
+    </div>
+</section>
+
+<section class="oe_container oe_dark">
+    <div class="oe_row oe_spaced">
+        <h2 class="oe_slogan" style="color:#875A7B;">How to use...</h2>
+        <p>
+            Configure working shedules(working days, working hours, lunch hours)
+            and holidays/working weekends in <strong>Settings/Technical/Working Shedule</strong>
+        </p>
+        <p>
+            Use code to calculate deadline from working time, ex...
+        </p>
+        <pre class="literal-block">
+    rec = self.env['workshedule.workhours'].search([('name', '=', 'Business time')], limit=1)
+    # start_datetime in localtime deadline, in localtime
+    deadline = rec.get_deadline(start_datetime, duration)
+    # for now aligned to minutes deadline in utc
+    tz_info = pytz.timezone(self.env.context.get('tz') or self.env.user.tz)
+    deadline = rec.get_deadline(datetime.now(tz_info).replace(second=0, microsecond=0),duration).astimezone(pytz.utc)
+
+        </pre>
+        <code>
+            Parameters
+            <ul>
+                <li>start_datetime - start of period (datetime.datetime)</li>
+                <li>duration - duration of period in minutes(int)</li>
+            </ul>
+            Result
+            <ul>
+                <li>deadline - end of period (datetime.datetime)</li>
+            </ul>
+        </code>
+        <p>
+            Issues post on <a href="https://github.com/mustafirus/odoo_addons/issues">github</a>
+        </p>
+    </div>
+</section>
+
