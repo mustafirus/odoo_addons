@@ -18,7 +18,7 @@
         'views/helpdesk_team_views.xml',
         'views/helpdesk_stage_views.xml',
         'views/helpdesk_data.xml',
-        'views/res_config_views.xml',
+        # 'views/res_config_views.xml',
         'views/helpdesk_templates.xml',
 
     ],

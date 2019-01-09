@@ -151,14 +151,13 @@
                 <templates>
                     <t t-name="kanban-tooltip">
                         <ul class="oe_kanban_tooltip">
-                            <li><b>Project:</b> </li>
+                            <li><b>Ticket:</b> </li>
                         </ul>
                     </t>
                     <t t-name="kanban-box">
                         <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click oe_semantic_html_override">
                             <div class="o_dropdown_kanban dropdown" groups="base.group_user">
-
-                                <a class="dropdown-toggle btn" data-toggle="dropdown" href="#" >
+                                <a role="button" class="dropdown-toggle btn" data-toggle="dropdown" href="#" >
                                     <span class="fa fa-bars fa-lg"/>
                                 </a>
                                 <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
@@ -183,7 +182,7 @@
                                     </t>
                                 </div>
                                 <div class="oe_kanban_bottom_right">
-                                    <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar pull-right"/>
+                                    <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" t-att-alt="record.user_id.value" width="24" height="24" class="oe_kanban_avatar pull-right"/>
                                     <div class="pull-left" groups="base.group_user">
                                         <field name="kanban_state" widget="kanban_state_selection"/>
                                     </div>
@@ -307,7 +306,7 @@
 
     <!-- Top menu item -->
 
-    <menuitem name="Helpdesk" id="menu_root" />
+    <menuitem name="Helpdesk" id="menu_root" action="helpdesk_ticket_categ_act0"/>
 
 
     <!-- menu categories -->
