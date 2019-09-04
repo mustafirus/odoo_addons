@@ -1292,7 +1292,7 @@ msgstr "Пошук запитів"
 #. module: helpdesk_lite
 #: model_terms:ir.ui.view,arch_db:helpdesk_lite.helpdesk_ticket_form_view
 msgid "Ticket Summary..."
-msgstr "Підсумок запиту..."
+msgstr "Заголовок запиту..."
 
 #. module: helpdesk_lite
 #: model:ir.actions.act_window,name:helpdesk_lite.act_helpdesk_lite_ticket_all
@@ -1326,7 +1326,7 @@ msgstr ""
 #. module: helpdesk_lite
 #: model_terms:ir.ui.view,arch_db:helpdesk_lite.view_helpdesk_ticket_filter
 msgid "Unassigned"
-msgstr "Непризначений"
+msgstr "Непризначені"
 
 #. module: helpdesk_lite
 #: model:ir.model.fields,field_description:helpdesk_lite.field_helpdesk_lite_team__message_unread
