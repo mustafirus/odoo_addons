@@ -200,3 +200,13 @@ class HelpdeskTicket(models.Model):
             # 'team_id': self.env['helpdesk_lite.team'].sudo()._get_default_team_id(user_id=self.env.uid).id
         }
         return super(HelpdeskTicket, self).write(vals)
+
+    @api.model_cr
+    def _register_hook(self):
+        HelpdeskTicket.website_form = bool(self.env['ir.module.module'].
+                                           search([('name', '=', 'website_form'), ('state', '=', 'installed')]))
+        if HelpdeskTicket.website_form:
+            self.env['ir.model'].search([('model', '=', self._name)]).write({'website_form_access': True})
+            self.env['ir.model.fields'].formbuilder_whitelist(
+                self._name, ['name', 'description', 'date_deadline', 'priority', 'partner_id', 'user_id'])
+        pass

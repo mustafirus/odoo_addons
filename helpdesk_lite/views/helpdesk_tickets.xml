@@ -311,12 +311,11 @@
 
     <!-- menu categories -->
 
-    <menuitem name="Dashboard" id="menu_dash" parent="menu_root" sequence="0"/>
-    <menuitem name="Search" id="menu_tickets" parent="menu_root" sequence="10"/>
+<!--    <menuitem name="Dashboard" id="menu_dash" parent="menu_root" sequence="0"/>-->
+<!--    <menuitem name="Search" id="menu_tickets" parent="menu_root" sequence="10"/>-->
+    <menuitem name="Tickets" id="menu_tickets_act" parent="menu_root"  sequence="10" action="helpdesk_ticket_categ_act0"/>
     <menuitem name="Configuration" id="menu_config" parent="menu_root" sequence="20" groups="base.group_system"/>
 
     <!-- actions -->
 
-    <menuitem name="Tickets" id="menu_tickets_act" parent="menu_tickets"
-              action="helpdesk_ticket_categ_act0"/>
 </odoo>

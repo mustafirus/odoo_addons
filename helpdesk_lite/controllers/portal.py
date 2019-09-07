@@ -88,22 +88,23 @@ class CustomerPortal(CustomerPortal):
         helpdesk_ticket = request.env['helpdesk_lite.ticket'].search(domain, order=order, limit=self._items_per_page, offset=pager['offset'])
 
         values.update({
-            'date': date_begin,
-            'date_end': date_end,
-            'sortby': sortby,
+            # 'date': date_begin,
+            # 'date_end': date_end,
             'tickets': helpdesk_ticket,
             'page_name': 'ticket',
-            'archive_groups': archive_groups,
+            # 'archive_groups': archive_groups,
             'default_url': '/my/tickets',
             'pager': pager,
             'searchbar_sortings': searchbar_sortings,
-            'searchbar_groupby': searchbar_groupby,
+            'sortby': sortby,
+            # 'searchbar_groupby': searchbar_groupby,
             'searchbar_inputs': searchbar_inputs,
             'search_in': search_in,
-            'sortby': sortby,
-            'groupby': groupby,
-            'searchbar_filters': OrderedDict(sorted(searchbar_filters.items())),
-            'filterby': filterby,
+            # 'new': HelpdeskTicket.website_form
+
+            # 'groupby': groupby,
+            # 'searchbar_filters': OrderedDict(sorted(searchbar_filters.items())),
+            # 'filterby': filterby,
         })
         return request.render("helpdesk_lite.portal_my_tickets", values)
 
@@ -112,41 +113,59 @@ class CustomerPortal(CustomerPortal):
         ticket = request.env['helpdesk_lite.ticket'].browse(ticket_id)
         return request.render("helpdesk_lite.my_tickets_ticket", {'ticket': ticket})
 
-    @http.route(['/helpdesk/submit'], type='http', auth="public", website=True)
-    def new_ticket(self, **kw):
+    @http.route(['/helpdesk/new'], type='http', auth="user", website=True)
+    def ticket_new(self, **kw):
+        pri = request.env['helpdesk_lite.ticket'].fields_get(allfields=['priority'])['priority']['selection']
+        pri_default = '1'
         if(request.session.uid):
-            user = request.env.user
+            # user = request.env.user
             vals = {
                 'partner_id': request.session.uid,
+                'priorities': pri,
+                'priority_default': pri_default,
             }
         else:
             vals = {
                 'partner_id': None,
+                'priorities': pri,
+                'priority_default': pri_default,
             }
 
         return request.render("helpdesk_lite.new_ticket", vals)
 
-    @http.route(['/helpdesk/ticket_thanks'], type='http', auth="public", website=True)
-    def ticket_thanks(self, **kw):
-        if(request.session.uid):
-            user = request.env.user
-            vals = {
-                'partner_id': request.session.uid,
-            }
-        else:
-            vals = {
-                'partner_id': None,
-            }
+    # @http.route(['/helpdesk/submit'], type='http', methods=['POST'], auth="user", website=True)
+    # def ticket_submit(self, name, description, date_deadline, priority, file, **kw):
+    #     vals = {
+    #         'name': name,
+    #         'description': description,
+    #         'partner_id': request.env.user.commercial_partner_id.id,
+    #         'date_deadline': date_deadline,
+    #         'priority': priority
+    #     }
+    #     request.env['helpdesk_lite.ticket'].create(vals)
+    #     return request.redirect("/my/tickets")
 
-        return request.render("helpdesk_lite.ticket_thanks", vals)
+    # @http.route(['/helpdesk/ticket_thanks'], type='http', auth="public", website=True)
+    # def ticket_thanks(self, **kw):
+    #     if(request.session.uid):
+    #         user = request.env.user
+    #         vals = {
+    #             'partner_id': request.session.uid,
+    #         }
+    #     else:
+    #         vals = {
+    #             'partner_id': None,
+    #         }
+    #
+    #     return request.render("helpdesk_lite.ticket_thanks", vals)
 
-    @http.route(['/helpdesk'], type='http', auth="public", website=True)
-    def helpdesk(self, **kw):
-        team = http.request.env.ref('helpdesk_lite.team_alpha')
-        team.website_published = False
-        return request.render("helpdesk_lite.helpdesk",{ 'use_website_helpdesk_form' : True,
-                                                    'team': team,
-                                                    })
+    # @http.route(['/helpdesk'], type='http', auth="public", website=True)
+    # def helpdesk(self, **kw):
+    #     team = http.request.env.ref('helpdesk_lite.team_alpha')
+    #     team.website_published = False
+    #     return request.render("helpdesk_lite.helpdesk",{ 'use_website_helpdesk_form' : True,
+    #                                                 'team': team,
+    #                                                 })
         # teams = http.request.env['helpdesk_lite.team']
         # return request.render("helpdesk_lite.helpdesk",{ 'teams' : teams,
         #                                             'team': team,
