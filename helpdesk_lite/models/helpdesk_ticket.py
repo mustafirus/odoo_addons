@@ -25,6 +25,8 @@ class HelpdeskTicket(models.Model):
     name = fields.Char(string='Ticket', track_visibility='always', required=True)
     description = fields.Text('Private Note')
     partner_id = fields.Many2one('res.partner', string='Customer', track_visibility='onchange', index=True)
+    commercial_partner_id = fields.Many2one(
+        related='partner_id.commercial_partner_id', string='Customer Company', store=True, index=True)
     contact_name = fields.Char('Contact Name')
     email_from = fields.Char('Email', help="Email address of the contact", index=True)
     user_id = fields.Many2one('res.users', string='Assigned to', track_visibility='onchange', index=True, default=False)
@@ -70,14 +72,22 @@ class HelpdeskTicket(models.Model):
         default.update(name=_('%s (copy)') % (self.name))
         return super(HelpdeskTicket, self).copy(default=default)
 
+    def _can_add__recipient(self, partner_id):
+        if not self.partner_id.email:
+            return False
+        if self.partner_id in self.message_follower_ids.mapped('partner_id'):
+            return False
+        return True
+
     @api.multi
     def message_get_suggested_recipients(self):
         recipients = super(HelpdeskTicket, self).message_get_suggested_recipients()
         try:
             for tic in self:
                 if tic.partner_id:
-                    tic._message_add_suggested_recipient(recipients, partner=tic.partner_id,
-                                                         reason=_('Customer'))
+                    if tic._can_add__recipient(tic.partner_id):
+                        tic._message_add_suggested_recipient(recipients, partner=tic.partner_id,
+                                                             reason=_('Customer'))
                 elif tic.email_from:
                     tic._message_add_suggested_recipient(recipients, email=tic.email_from,
                                                          reason=_('Customer Email'))
@@ -97,14 +107,6 @@ class HelpdeskTicket(models.Model):
 
     @api.model
     def message_new(self, msg, custom_values=None):
-        """ Overrides mail_thread message_new that is called by the mailgateway
-            through message_process.
-            This override updates the document according to the email.
-        """
-        # remove default author when going through the mail gateway. Indeed we
-        # do not want to explicitly set user_id to False; however we do not
-        # want the gateway user to be responsible if no other responsible is
-        # found.
         match = re.match(r"(.*) *<(.*)>", msg.get('from'))
         if match:
             contact_name, email_from =  match.group(1,2)
@@ -153,20 +155,17 @@ class HelpdeskTicket(models.Model):
 
         return super(HelpdeskTicket, self.with_context(create_context)).message_new(msg, custom_values=defaults)
 
-    @api.model
+    @api.model_create_single
     def create(self, vals):
-
-        # if partner_id:
-        #     vals.update({
-        #         'message_follower_ids': [(4, partner_id)]
-        #         })
-
         context = dict(self.env.context)
         context.update({
-            'mail_create_nosubscribe': True,
+            'mail_create_nosubscribe': False,
         })
-        # self.message_subscribe([partner_id])
-        return super(HelpdeskTicket, self.with_context(context)).create(vals)
+        res = super(HelpdeskTicket, self.with_context(context)).create(vals)
+        # res = super().create(vals)
+        if res.partner_id:
+            res.message_subscribe([res.partner_id.id])
+        return res
 
 
     @api.multi

@@ -32,20 +32,23 @@ class CustomerPortal(CustomerPortal):
             'stage': {'label': _('Stage'), 'order': 'stage_id'},
 #            'update': {'label': _('Last Stage Update'), 'order': 'date_last_stage_update desc'},
         }
-        searchbar_filters = {
-            'all': {'label': _('All'), 'domain': []},
-        }
+        # searchbar_filters = {
+        #     'all': {'label': _('All'), 'domain': []},
+        #     'open': {'label': _('Opened'), 'domain': [('stage_id.code', '=', 'open')]},
+        #     'wait': {'label': _('Wait for user'), 'domain': [('stage_id.code', '=', 'wait')]},
+        #     'close': {'label': _('Closed'), 'domain': [('stage_id.code', '=', 'close')]},
+        # }
         searchbar_inputs = {
             'content': {'input': 'content', 'label': _('Search <span class="nolabel"> (in Content)</span>')},
             'message': {'input': 'message', 'label': _('Search in Messages')},
 #            'customer': {'input': 'customer', 'label': _('Search in Customer')},
-            'stage': {'input': 'stage', 'label': _('Search in Stages')},
+#             'stage': {'input': 'stage', 'label': _('Search in Stages')},
             'all': {'input': 'all', 'label': _('Search in All')},
         }
-        searchbar_groupby = {
-            'none': {'input': 'none', 'label': _('None1')},
-            'project': {'input': 'project', 'label': _('Project')},
-        }
+        # searchbar_groupby = {
+        #     'none': {'input': 'none', 'label': _('None1')},
+        #     'stage': {'input': 'stage', 'label': _('Stage')},
+        # }
 
         domain = ([])
 
@@ -54,9 +57,9 @@ class CustomerPortal(CustomerPortal):
             sortby = 'date'
         order = searchbar_sortings[sortby]['order']
         # default filter by value
-        if not filterby:
-            filterby = 'all'
-        domain += searchbar_filters[filterby]['domain']
+        # if not filterby:
+        #     filterby = 'wait'
+        # domain += searchbar_filters[filterby]['domain']
 
         # archive groups - Default Group By 'create_date'
         archive_groups = self._get_archive_groups('helpdesk_lite.ticket', domain)
@@ -76,11 +79,13 @@ class CustomerPortal(CustomerPortal):
                 search_domain = OR([search_domain, [('stage_id', 'ilike', search)]])
             domain += search_domain
 
+        ticket_count = request.env['helpdesk_lite.ticket'].search_count(domain)
         # pager
         pager = request.website.pager(
             url="/my/tickets",
-            url_args={'date_begin': date_begin, 'date_end': date_end},
-            total=values['ticket_count'],
+            url_args={'date_begin': date_begin, 'date_end': date_end, 'sortby': sortby, 'filterby': filterby, 'search_in': search_in, 'search': search},
+            # url_args={'date_begin': date_begin, 'date_end': date_end},
+            total=ticket_count,
             page=page,
             step=self._items_per_page
         )
@@ -113,61 +118,23 @@ class CustomerPortal(CustomerPortal):
         ticket = request.env['helpdesk_lite.ticket'].browse(ticket_id)
         return request.render("helpdesk_lite.my_tickets_ticket", {'ticket': ticket})
 
-    @http.route(['/helpdesk/new'], type='http', auth="user", website=True)
+    @http.route(['/helpdesk/new'], type='http', auth="public", website=True)
     def ticket_new(self, **kw):
         pri = request.env['helpdesk_lite.ticket'].fields_get(allfields=['priority'])['priority']['selection']
         pri_default = '1'
         if(request.session.uid):
             # user = request.env.user
             vals = {
-                'partner_id': request.session.uid,
+                'loggedin': True,
                 'priorities': pri,
                 'priority_default': pri_default,
             }
         else:
             vals = {
-                'partner_id': None,
+                'loggedin': False,
                 'priorities': pri,
                 'priority_default': pri_default,
             }
 
         return request.render("helpdesk_lite.new_ticket", vals)
-
-    # @http.route(['/helpdesk/submit'], type='http', methods=['POST'], auth="user", website=True)
-    # def ticket_submit(self, name, description, date_deadline, priority, file, **kw):
-    #     vals = {
-    #         'name': name,
-    #         'description': description,
-    #         'partner_id': request.env.user.commercial_partner_id.id,
-    #         'date_deadline': date_deadline,
-    #         'priority': priority
-    #     }
-    #     request.env['helpdesk_lite.ticket'].create(vals)
-    #     return request.redirect("/my/tickets")
-
-    # @http.route(['/helpdesk/ticket_thanks'], type='http', auth="public", website=True)
-    # def ticket_thanks(self, **kw):
-    #     if(request.session.uid):
-    #         user = request.env.user
-    #         vals = {
-    #             'partner_id': request.session.uid,
-    #         }
-    #     else:
-    #         vals = {
-    #             'partner_id': None,
-    #         }
-    #
-    #     return request.render("helpdesk_lite.ticket_thanks", vals)
-
-    # @http.route(['/helpdesk'], type='http', auth="public", website=True)
-    # def helpdesk(self, **kw):
-    #     team = http.request.env.ref('helpdesk_lite.team_alpha')
-    #     team.website_published = False
-    #     return request.render("helpdesk_lite.helpdesk",{ 'use_website_helpdesk_form' : True,
-    #                                                 'team': team,
-    #                                                 })
-        # teams = http.request.env['helpdesk_lite.team']
-        # return request.render("helpdesk_lite.helpdesk",{ 'teams' : teams,
-        #                                             'team': team,
-        #                                             'use_website_helpdesk_form' : True })
 

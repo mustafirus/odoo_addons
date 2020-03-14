@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': "HelpDesk",
-    'version': "1.0",
+    'version': "1.1.1",
     'author': "Golubev",
     'category': "Tools",
     'support': "golubev@svami.in.ua",

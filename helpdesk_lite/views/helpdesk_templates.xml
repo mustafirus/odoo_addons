@@ -57,8 +57,8 @@
                 <t t-set="title">Tickets</t>
             </t>
 
-            <div t-if="tickets.website_form" class="btn-group flex-grow-1 mr-1 mb-1">
-                <a class="btn btn-primary btn-block" href="/helpdesk/new" title="New Ticket"><i class="fa fa-ticket"/> New Ticket</a>
+            <div class="hl_buttons btn-group btn-block flex-grow-1 mr-1 mb-1">
+                <a t-if="tickets.website_form" class="btn btn-primary" href="/helpdesk/new" title="New Ticket"><i class="fa fa-ticket"/> New Ticket</a>
             </div>
 
             <t t-if="not tickets">
@@ -168,18 +168,17 @@
         <t t-call="portal.portal_layout">
             <t t-set="page_name">newticket</t>
             <form action="/website_form/" method="post" class="s_website_form container-fluid mt32"
-                  enctype="multipart/form-data" data-model_name="helpdesk_lite.ticket" data-success_page="/my/tickets">
+                  enctype="multipart/form-data" data-model_name="helpdesk_lite.ticket"
+                  t-att-data-success_page="'/my/tickets' if loggedin else '/'">
 <!--                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>-->
-<!--
-                <input name="partner_id" required="1" type="hidden"
-                       t-att-value="partner_id" invisible="1"/>
--->
+<!--                <input name="partner_id" required="1" type="hidden" t-att-value="partner_id"/>-->
+
                 <div class="card">
                     <div class="card-header">
                         <h3>New Ticket</h3>
                     </div>
                     <div class="card-body">
-                        <t t-if="not partner_id">
+                        <t t-if="not loggedin">
                             <div class="form-group form-field" attrs="{'invisible': [('partner_id','=',None)]}">
                                 <div class="col-md-3 col-sm-4 text-right">
                                     <label class="control-label" for="contact_name">Customer Name</label>
